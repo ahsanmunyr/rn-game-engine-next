@@ -32,5 +32,22 @@ target 'RnGameEngineNextExample' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        # Fix: non-modular-include-in-framework-module errors across RCT-Folly, glog, Yoga, fmt
+        config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+      end
+    end
+
+    # Fix: fmt consteval errors on Xcode 26+ / newer Clang
+    # GCC_PREPROCESSOR_DEFINITIONS won't work when fmt is compiled as a module (cached).
+    # Patch the fmt headers directly so the source itself disables consteval.
+    fmt_headers = Dir["#{installer.sandbox.root}/fmt/include/fmt/*.h"]
+    fmt_headers.each do |header|
+      content = File.read(header)
+      patched = content.gsub(/(#\s*define\s+FMT_USE_CONSTEVAL)\s+1/, '\1 0')
+      File.write(header, patched) if patched != content
+    end
   end
 end
