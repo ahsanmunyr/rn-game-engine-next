@@ -7859,17 +7859,17 @@ __metadata:
     turbo: "npm:^2.5.6"
     typescript: "npm:^5.9.2"
   peerDependencies:
+    "@shopify/react-native-skia": ">=1.0.0"
     react: ">=18.0.0"
     react-native: ">=0.76.0"
     react-native-reanimated: ">=3.0.0"
     react-native-sensors: ">=7.0.0"
-    react-native-skia: ">=1.0.0"
   peerDependenciesMeta:
+    "@shopify/react-native-skia":
+      optional: true
     react-native-reanimated:
       optional: true
     react-native-sensors:
-      optional: true
-    react-native-skia:
       optional: true
   languageName: unknown
   linkType: soft
