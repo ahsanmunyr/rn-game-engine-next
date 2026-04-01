@@ -40,19 +40,29 @@
   },
   "keywords": [
     "react-native",
+    "game-engine",
+    "game",
+    "ecs",
+    "skia",
+    "reanimated",
+    "new-architecture",
     "ios",
-    "android"
+    "android",
+    "60fps",
+    "120fps",
+    "promotion",
+    "entity-component-system"
   ],
   "repository": {
     "type": "git",
-    "url": "git+.git"
+    "url": "git+https://github.com/ahsanmunyr/rn-game-engine-next.git"
   },
-  "author": "Ahsan <> ()",
+  "author": "Muhammad Ahsan Munir",
   "license": "MIT",
   "bugs": {
-    "url": "/issues"
+    "url": "https://github.com/ahsanmunyr/rn-game-engine-next/issues"
   },
-  "homepage": "#readme",
+  "homepage": "https://github.com/ahsanmunyr/rn-game-engine-next#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -82,7 +92,7 @@
     "react-native": ">=0.76.0",
     "react-native-reanimated": ">=3.0.0",
     "react-native-sensors": ">=7.0.0",
-    "react-native-skia": ">=1.0.0"
+    "@shopify/react-native-skia": ">=1.0.0"
   },
   "peerDependenciesMeta": {
     "react-native-reanimated": {
@@ -91,7 +101,7 @@
     "react-native-sensors": {
       "optional": true
     },
-    "react-native-skia": {
+    "@shopify/react-native-skia": {
       "optional": true
     }
   },
