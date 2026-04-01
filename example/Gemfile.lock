@@ -105,8 +105,5 @@ DEPENDENCIES
   mutex_m
   xcodeproj (< 1.26.0)
 
-RUBY VERSION
-   ruby 2.6.10p210
-
 BUNDLED WITH
-   1.17.2
+   2.5.23
