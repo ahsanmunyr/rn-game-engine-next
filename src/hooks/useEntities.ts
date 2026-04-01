@@ -22,7 +22,9 @@ export interface UseEntitiesReturn {
  * Uses an internal mutable ref for the hot loop path and triggers
  * a React re-render when you explicitly want one.
  */
-export function useEntities(initial: Entities | (() => Entities) = {}): UseEntitiesReturn {
+export function useEntities(
+  initial: Entities | (() => Entities) = {}
+): UseEntitiesReturn {
   const [, forceUpdate] = useState(0);
   const entitiesRef = useRef<Entities>(
     typeof initial === 'function' ? initial() : { ...initial }
@@ -31,7 +33,10 @@ export function useEntities(initial: Entities | (() => Entities) = {}): UseEntit
   const add = useCallback(
     (entity: Omit<Entity, 'id'> & { id?: EntityId }): EntityId => {
       const id = entity.id ?? generateEntityId();
-      entitiesRef.current = addEntity(entitiesRef.current, { ...entity, id } as Entity);
+      entitiesRef.current = addEntity(entitiesRef.current, {
+        ...entity,
+        id,
+      } as Entity);
       forceUpdate((n) => n + 1);
       return id;
     },
@@ -58,8 +63,8 @@ export function useEntities(initial: Entities | (() => Entities) = {}): UseEntit
       entitiesRef.current = next
         ? cloneEntities(next)
         : typeof initial === 'function'
-          ? initial()
-          : { ...initial };
+        ? initial()
+        : { ...initial };
       forceUpdate((n) => n + 1);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

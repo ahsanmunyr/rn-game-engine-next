@@ -4,10 +4,15 @@ type Listener<T = unknown> = (data: T) => void;
  * Tiny, zero-dependency event emitter that replaces rxjs.
  * Supports typed events via generics.
  */
-export class EventEmitter<Events extends Record<string, unknown> = Record<string, unknown>> {
+export class EventEmitter<
+  Events extends Record<string, unknown> = Record<string, unknown>
+> {
   private listeners: Map<keyof Events, Set<Listener<unknown>>> = new Map();
 
-  on<K extends keyof Events>(event: K, listener: Listener<Events[K]>): () => void {
+  on<K extends keyof Events>(
+    event: K,
+    listener: Listener<Events[K]>
+  ): () => void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set());
     }
@@ -16,7 +21,10 @@ export class EventEmitter<Events extends Record<string, unknown> = Record<string
     return () => this.off(event, listener);
   }
 
-  once<K extends keyof Events>(event: K, listener: Listener<Events[K]>): () => void {
+  once<K extends keyof Events>(
+    event: K,
+    listener: Listener<Events[K]>
+  ): () => void {
     const wrapper: Listener<Events[K]> = (data) => {
       listener(data);
       this.off(event, wrapper);

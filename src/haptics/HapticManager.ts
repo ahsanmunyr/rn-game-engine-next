@@ -32,7 +32,6 @@ class HapticManagerClass {
 
   private initNativeModule() {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const { TurboModuleRegistry } = require('react-native');
       const mod = TurboModuleRegistry.get('RnGameEngineNext');
       if (mod && typeof mod.triggerHaptic === 'function') {

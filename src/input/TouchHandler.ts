@@ -33,7 +33,9 @@ function extractChangedPoints(e: GestureResponderEvent): TouchPoint[] {
   }));
 }
 
-export function createTouchHandler(options: TouchHandlerOptions): PanResponderInstance {
+export function createTouchHandler(
+  options: TouchHandlerOptions
+): PanResponderInstance {
   const { onTouch } = options;
 
   const longPressTimers = new Map<number, ReturnType<typeof setTimeout>>();

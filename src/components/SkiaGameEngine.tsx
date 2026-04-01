@@ -127,7 +127,8 @@ export function SkiaGameEngine({
           const samples = deltaSamplesRef.current;
           samples.push(delta);
           if (samples.length > 30) samples.shift();
-          const avg = samples.reduce((a: number, b: number) => a + b, 0) / samples.length;
+          const avg =
+            samples.reduce((a: number, b: number) => a + b, 0) / samples.length;
           const fps = avg > 0 ? Math.round(1000 / avg) : 0;
 
           const time: GameTime = {
@@ -164,7 +165,7 @@ export function SkiaGameEngine({
 
     rafRef.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(rafRef.current);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ─── Touch input ──────────────────────────────────────────────────────────

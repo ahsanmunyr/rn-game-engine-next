@@ -32,7 +32,9 @@ export class SceneManager {
 
     this.state.activeScene = sceneName;
     this.state.entities =
-      typeof scene.entities === 'function' ? scene.entities() : { ...scene.entities };
+      typeof scene.entities === 'function'
+        ? scene.entities()
+        : { ...scene.entities };
     this.state.systems = [...scene.systems];
   }
 

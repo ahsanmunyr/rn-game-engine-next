@@ -46,7 +46,10 @@ export function queryEntities(
 }
 
 /** Get a single entity by ID */
-export function getEntity(entities: Entities, id: EntityId): Entity | undefined {
+export function getEntity(
+  entities: Entities,
+  id: EntityId
+): Entity | undefined {
   return entities[id];
 }
 

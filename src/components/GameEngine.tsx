@@ -1,10 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { createGameLoop } from '../core/GameLoop';
 import { SensorBridge } from '../input/SensorBridge';
@@ -44,7 +38,9 @@ export function GameEngine({
 }: GameEngineProps) {
   // ─── State refs (mutable, avoids stale closures in the game loop) ──────────
   const entitiesRef = useRef<Entities>(
-    typeof initialEntities === 'function' ? initialEntities() : { ...initialEntities }
+    typeof initialEntities === 'function'
+      ? initialEntities()
+      : { ...initialEntities }
   );
   const systemsRef = useRef<System[]>(systems);
   const runningRef = useRef(running);
@@ -77,10 +73,13 @@ export function GameEngine({
   }, [sceneManager, initialScene]);
 
   // ─── Dispatch ─────────────────────────────────────────────────────────────
-  const dispatch = useCallback((event: GameEvent) => {
-    pendingEvents.current.push(event);
-    onEvent?.(event);
-  }, [onEvent]);
+  const dispatch = useCallback(
+    (event: GameEvent) => {
+      pendingEvents.current.push(event);
+      onEvent?.(event);
+    },
+    [onEvent]
+  );
 
   // ─── Physics system injection ──────────────────────────────────────────────
   useEffect(() => {
@@ -104,7 +103,7 @@ export function GameEngine({
       // Prepend physics system so it runs before user systems
       systemsRef.current = [physicsSystem, ...systemsRef.current];
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [physics]);
 
   // ─── Sensors ──────────────────────────────────────────────────────────────
@@ -163,7 +162,7 @@ export function GameEngine({
     });
 
     return () => loop.stop();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Start/stop in response to `running` prop changes
@@ -190,10 +189,14 @@ export function GameEngine({
       dispatch,
       time: timeRef.current,
       running: runningRef.current,
-      stop: () => { runningRef.current = false; },
-      start: () => { runningRef.current = true; },
+      stop: () => {
+        runningRef.current = false;
+      },
+      start: () => {
+        runningRef.current = true;
+      },
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [dispatch]
   );
 

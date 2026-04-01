@@ -24,12 +24,7 @@ export interface GameTime {
 
 // ─── Touch ───────────────────────────────────────────────────────────────────
 
-export type TouchEventType =
-  | 'start'
-  | 'end'
-  | 'move'
-  | 'press'
-  | 'long-press';
+export type TouchEventType = 'start' | 'end' | 'move' | 'press' | 'long-press';
 
 export interface TouchPoint {
   id: number;

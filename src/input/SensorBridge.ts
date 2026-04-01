@@ -13,11 +13,10 @@ export class SensorBridge {
   private accelSub: { unsubscribe: () => void } | null = null;
   private gyroSub: { unsubscribe: () => void } | null = null;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private getSensors(): any | null {
     try {
       // Dynamic require so the library doesn't crash when sensors aren't installed
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
+
       return require('react-native-sensors');
     } catch {
       return null;
@@ -36,7 +35,6 @@ export class SensorBridge {
     const { accelerometer, setUpdateIntervalForType, SensorTypes } = sensors;
     setUpdateIntervalForType(SensorTypes.accelerometer, interval);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.accelSub = accelerometer.subscribe(({ x, y, z, timestamp }: any) => {
       onData({ x, y, z, timestamp });
     });
@@ -59,7 +57,6 @@ export class SensorBridge {
     const { gyroscope, setUpdateIntervalForType, SensorTypes } = sensors;
     setUpdateIntervalForType(SensorTypes.gyroscope, interval);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.gyroSub = gyroscope.subscribe(({ x, y, z, timestamp }: any) => {
       onData({ x, y, z, timestamp });
     });

@@ -10,7 +10,9 @@ export interface GameEngineContextValue {
   start: () => void;
 }
 
-export const GameEngineContext = createContext<GameEngineContextValue | null>(null);
+export const GameEngineContext = createContext<GameEngineContextValue | null>(
+  null
+);
 
 /**
  * Access the GameEngine context from any child component inside <GameEngine>.
@@ -24,7 +26,9 @@ export const GameEngineContext = createContext<GameEngineContextValue | null>(nu
 export function useGameEngine(): GameEngineContextValue {
   const ctx = useContext(GameEngineContext);
   if (!ctx) {
-    throw new Error('useGameEngine must be used inside a <GameEngine> component');
+    throw new Error(
+      'useGameEngine must be used inside a <GameEngine> component'
+    );
   }
   return ctx;
 }

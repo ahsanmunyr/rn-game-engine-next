@@ -84,7 +84,8 @@ export function createArcadePhysicsSystem(options: {
         const [idA, bodyA] = pairA;
         const [idB, bodyB] = pairB;
 
-        if (bodyA.bodyType === 'static' && bodyB.bodyType === 'static') continue;
+        if (bodyA.bodyType === 'static' && bodyB.bodyType === 'static')
+          continue;
 
         const updatedA = entities[idA] as unknown as ArcadeBody;
         const updatedB = entities[idB] as unknown as ArcadeBody;
@@ -101,8 +102,12 @@ export function createArcadePhysicsSystem(options: {
             // Both dynamic: swap velocities (elastic)
             const tmpVx = (entities[idA] as Record<string, unknown>).velocityX;
             const tmpVy = (entities[idA] as Record<string, unknown>).velocityY;
-            (entities[idA] as Record<string, unknown>).velocityX = (entities[idB] as Record<string, unknown>).velocityX;
-            (entities[idA] as Record<string, unknown>).velocityY = (entities[idB] as Record<string, unknown>).velocityY;
+            (entities[idA] as Record<string, unknown>).velocityX = (
+              entities[idB] as Record<string, unknown>
+            ).velocityX;
+            (entities[idA] as Record<string, unknown>).velocityY = (
+              entities[idB] as Record<string, unknown>
+            ).velocityY;
             (entities[idB] as Record<string, unknown>).velocityX = tmpVx;
             (entities[idB] as Record<string, unknown>).velocityY = tmpVy;
           }
@@ -157,9 +162,8 @@ function resolveCollision(
 export function createMatterPhysicsSystem(options?: {
   gravity?: { x: number; y: number; scale?: number };
 }): System {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let Matter: any = null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   let engine: any = null;
 
   try {
@@ -184,7 +188,6 @@ export function createMatterPhysicsSystem(options?: {
     for (const id in entities) {
       const e = entities[id] as Record<string, unknown>;
       if (e._matterBody) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const body = e._matterBody as any;
         (entities[id] as Record<string, unknown>).x =
           body.position.x - (e.width as number) / 2;

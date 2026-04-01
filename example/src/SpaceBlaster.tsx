@@ -271,10 +271,10 @@ const StarSystem: System = (entities, { time }) => {
 };
 
 const PlayerSystem: System = (entities, { time }) => {
-  const gs = entities['gameState'];
+  const gs = entities.gameState;
   if (!gs || gs.enginePhase === 'game_over') return entities;
-  const player = entities['player'];
-  const thruster = entities['thruster'];
+  const player = entities.player;
+  const thruster = entities.thruster;
   if (!player) return entities;
   const dx = _touchX - (player.x as number);
   const move = Math.sign(dx) * Math.min(Math.abs(dx), 390 * time.deltaSeconds);
@@ -291,7 +291,7 @@ const PlayerSystem: System = (entities, { time }) => {
 
 // Tick elapsed, fire player bullets based on current upgrade state
 const AutoFireSystem: System = (entities, { time }) => {
-  const gs = entities['gameState'];
+  const gs = entities.gameState;
   if (
     !gs ||
     gs.enginePhase === 'game_over' ||
@@ -303,7 +303,7 @@ const AutoFireSystem: System = (entities, { time }) => {
   const next: Entities = { ...entities, gameState: { ...gs, elapsed } };
   if (elapsed < (gs.nextFireTime as number)) return next;
 
-  const player = entities['player'];
+  const player = entities.player;
   if (!player) return next;
 
   const gl = gs.gunLevel as number;
@@ -334,8 +334,8 @@ const AutoFireSystem: System = (entities, { time }) => {
       };
     }
   }
-  next['gameState'] = {
-    ...next['gameState']!,
+  next.gameState = {
+    ...next.gameState!,
     nextFireTime: elapsed + interval,
     bulletSeq: seq,
   };
@@ -360,7 +360,7 @@ const BulletSystem: System = (entities, { time }) => {
 
 // Spawn wave enemies until waveTotal reached
 const EnemySpawnSystem: System = (entities) => {
-  const gs = entities['gameState'];
+  const gs = entities.gameState;
   if (!gs || gs.enginePhase !== 'wave') return entities;
   if ((gs.waveSpawned as number) >= (gs.waveTotal as number)) return entities;
   const elapsed = gs.elapsed as number;
@@ -407,11 +407,11 @@ const EnemySystem: System = (entities, { time }) => {
     }
   }
   if (escaped > 0) {
-    const gs = next['gameState'];
+    const gs = next.gameState;
     if (gs) {
       const lives = Math.max(0, (gs.lives as number) - escaped);
       const resolved = (gs.waveResolved as number) + escaped;
-      next['gameState'] = {
+      next.gameState = {
         ...gs,
         lives,
         waveResolved: resolved,
@@ -424,7 +424,7 @@ const EnemySystem: System = (entities, { time }) => {
 
 // After all wave enemies are resolved and none remain on-screen, signal wave_complete
 const WaveCheckSystem: System = (entities) => {
-  const gs = entities['gameState'];
+  const gs = entities.gameState;
   if (!gs || gs.enginePhase !== 'wave') return entities;
   if ((gs.waveSpawned as number) < (gs.waveTotal as number)) return entities;
   if ((gs.waveResolved as number) < (gs.waveTotal as number)) return entities;
@@ -438,7 +438,7 @@ const UpgradeSystem: System = (entities) => {
   if (!_pendingBoss) return entities;
   const { upgrades, cfg, lives } = _pendingBoss;
   _pendingBoss = null;
-  const gs = entities['gameState'];
+  const gs = entities.gameState;
   if (!gs) return entities;
   const bossHp = cfg.bossMaxHp;
   return {
@@ -470,9 +470,9 @@ const UpgradeSystem: System = (entities) => {
 
 // Move boss left↔right; change color by HP%; fire back in round 2+
 const BossSystem: System = (entities, { time }) => {
-  const gs = entities['gameState'];
+  const gs = entities.gameState;
   if (!gs || gs.enginePhase !== 'boss') return entities;
-  const boss = entities['boss'];
+  const boss = entities.boss;
   if (!boss) return entities;
 
   let x = (boss.x as number) + (boss.vx as number) * time.deltaSeconds;
@@ -520,8 +520,8 @@ const BossSystem: System = (entities, { time }) => {
         renderer: { type: 'circle', radius: BOSS_BULLET_R, color: '#ff4444' },
       };
     }
-    next['gameState'] = {
-      ...next['gameState']!,
+    next.gameState = {
+      ...next.gameState!,
       nextBossFireTime: elapsed + bfi,
       bossBulletSeq: bbSeq,
     };
@@ -562,7 +562,7 @@ const CollisionSystem: System = (entities) => {
     life: number,
     spdRange: [number, number]
   ) {
-    const gs = next['gameState'];
+    const gs = next.gameState;
     if (!gs) return;
     let pSeq = gs.particleSeq as number;
     for (let i = 0; i < count; i++) {
@@ -584,7 +584,7 @@ const CollisionSystem: System = (entities) => {
         },
       };
     }
-    next['gameState'] = { ...gs, particleSeq: pSeq + count };
+    next.gameState = { ...gs, particleSeq: pSeq + count };
   }
 
   // ── Player bullets × wave enemies ──────────────────────────────────────
@@ -603,11 +603,11 @@ const CollisionSystem: System = (entities) => {
       delete next[bKey];
       delete next[eKey];
 
-      const gs = next['gameState'];
+      const gs = next.gameState;
       if (gs) {
         const resolved = (gs.waveResolved as number) + 1;
         const score = (gs.score as number) + 10 * (gs.round as number);
-        next['gameState'] = { ...gs, waveResolved: resolved, score };
+        next.gameState = { ...gs, waveResolved: resolved, score };
         burst(
           e.x as number,
           e.y as number,
@@ -623,9 +623,9 @@ const CollisionSystem: System = (entities) => {
   }
 
   // ── Player bullets × boss ──────────────────────────────────────────────
-  const boss = next['boss'];
+  const boss = next.boss;
   if (boss) {
-    const damage = (next['gameState']?.powerBullet as boolean) ? 2 : 1;
+    const damage = (next.gameState?.powerBullet as boolean) ? 2 : 1;
     for (const bKey of bulletKeys) {
       const b = next[bKey];
       if (!b) continue;
@@ -646,7 +646,7 @@ const CollisionSystem: System = (entities) => {
       );
 
       if (newHp <= 0) {
-        delete next['boss'];
+        delete next.boss;
         // Large multi-colour explosion
         (['#ff1744', '#ff6d00', '#ffeb3b', '#ffffff'] as const).forEach(
           (col) => {
@@ -661,19 +661,18 @@ const CollisionSystem: System = (entities) => {
             );
           }
         );
-        const gs = next['gameState'];
-        if (gs)
-          next['gameState'] = { ...gs, enginePhase: 'boss_dead', bossHp: 0 };
+        const gs = next.gameState;
+        if (gs) next.gameState = { ...gs, enginePhase: 'boss_dead', bossHp: 0 };
       } else {
-        next['boss'] = { ...boss, hp: newHp };
-        const gs = next['gameState'];
-        if (gs) next['gameState'] = { ...gs, bossHp: newHp };
+        next.boss = { ...boss, hp: newHp };
+        const gs = next.gameState;
+        if (gs) next.gameState = { ...gs, bossHp: newHp };
       }
     }
   }
 
   // ── Wave enemies × player ──────────────────────────────────────────────
-  const player = next['player'];
+  const player = next.player;
   if (player) {
     const px = player.x as number,
       py = player.y as number;
@@ -684,11 +683,11 @@ const CollisionSystem: System = (entities) => {
         dy = py - (e.y as number);
       if (Math.sqrt(dx * dx + dy * dy) < ENEMY_R + PLAYER_H / 2) {
         delete next[eKey];
-        const gs = next['gameState'];
+        const gs = next.gameState;
         if (gs) {
           const lives = Math.max(0, (gs.lives as number) - 1);
           const resolved = (gs.waveResolved as number) + 1;
-          next['gameState'] = {
+          next.gameState = {
             ...gs,
             lives,
             waveResolved: resolved,
@@ -710,10 +709,10 @@ const CollisionSystem: System = (entities) => {
         dy = py - (bb.y as number);
       if (Math.sqrt(dx * dx + dy * dy) < BOSS_BULLET_R + PLAYER_H / 2) {
         delete next[bbKey];
-        const gs = next['gameState'];
+        const gs = next.gameState;
         if (gs) {
           const lives = Math.max(0, (gs.lives as number) - 1);
-          next['gameState'] = {
+          next.gameState = {
             ...gs,
             lives,
             enginePhase: lives === 0 ? 'game_over' : (gs.enginePhase as string),
@@ -872,7 +871,7 @@ export default function SpaceBlaster() {
         )}
         running={uiPhase !== 'game_over'}
         onUpdate={(ents, time) => {
-          const gs = ents['gameState'];
+          const gs = ents.gameState;
           if (!gs) return;
           const p = prev.current;
 
@@ -1044,7 +1043,12 @@ const s = StyleSheet.create({
     paddingHorizontal: 7,
     paddingVertical: 4,
   },
-  fpsNum: { color: '#4fc3f7', fontSize: 15, fontWeight: 'bold', fontVariant: ['tabular-nums'] },
+  fpsNum: {
+    color: '#4fc3f7',
+    fontSize: 15,
+    fontWeight: 'bold',
+    fontVariant: ['tabular-nums'],
+  },
   fpsLbl: { color: '#4fc3f7', fontSize: 8, letterSpacing: 2, opacity: 0.7 },
   livesVal: { color: '#ef5350', fontSize: 18 },
 
