@@ -62,6 +62,7 @@
     "@eslint/js": "^9.35.0",
     "@react-native/babel-preset": "0.83.0",
     "@react-native/eslint-config": "0.83.0",
+    "@shopify/react-native-skia": "^2.5.5",
     "@types/react": "^19.2.0",
     "del-cli": "^6.0.0",
     "eslint": "^9.35.0",
@@ -71,16 +72,37 @@
     "react": "19.2.0",
     "react-native": "0.83.0",
     "react-native-builder-bob": "^0.40.13",
+    "react-native-reanimated": "^4.3.0",
+    "react-native-worklets": "^0.8.1",
     "turbo": "^2.5.6",
     "typescript": "^5.9.2"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-native": "*"
+    "react": ">=18.0.0",
+    "react-native": ">=0.76.0",
+    "react-native-reanimated": ">=3.0.0",
+    "react-native-sensors": ">=7.0.0",
+    "react-native-skia": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react-native-reanimated": {
+      "optional": true
+    },
+    "react-native-sensors": {
+      "optional": true
+    },
+    "react-native-skia": {
+      "optional": true
+    }
   },
   "workspaces": [
     "example"
   ],
+  "resolutions": {
+    "finalhandler": "^1.2.0",
+    "connect/finalhandler": "^1.2.0",
+    "statuses": "^2.0.0"
+  },
   "packageManager": "yarn@4.11.0",
   "react-native-builder-bob": {
     "source": "src",

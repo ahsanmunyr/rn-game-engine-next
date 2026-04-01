@@ -1,7 +1,11 @@
 import { TurboModuleRegistry, type TurboModule } from 'react-native';
 
 export interface Spec extends TurboModule {
-  multiply(a: number, b: number): number;
+  /**
+   * Trigger haptic feedback.
+   * @param type - 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error'
+   */
+  triggerHaptic(type: string): void;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('RnGameEngineNext');
