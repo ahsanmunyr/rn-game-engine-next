@@ -918,7 +918,6 @@ export default function SpaceBlaster() {
         </View>
         <View style={s.hudBlock}>
           <Text style={s.roundVal}>ROUND {round}</Text>
-          <Text style={s.fpsVal}>{fps} fps</Text>
         </View>
         <View style={s.hudBlock}>
           <Text style={s.livesVal}>
@@ -926,6 +925,12 @@ export default function SpaceBlaster() {
           </Text>
           <Text style={s.hudLbl}>LIVES</Text>
         </View>
+      </View>
+
+      {/* ── FPS corner badge ────────────────────────────────────────────── */}
+      <View style={s.fpsBadge} pointerEvents="none">
+        <Text style={s.fpsNum}>{fps}</Text>
+        <Text style={s.fpsLbl}>FPS</Text>
       </View>
 
       {/* ── Boss HP bar ──────────────────────────────────────────────────── */}
@@ -1029,7 +1034,18 @@ const s = StyleSheet.create({
   },
   hudLbl: { color: '#444', fontSize: 10, letterSpacing: 2, marginTop: 2 },
   roundVal: { color: '#4fc3f7', fontSize: 20, fontWeight: 'bold' },
-  fpsVal: { color: '#333', fontSize: 11, marginTop: 3 },
+  fpsBadge: {
+    position: 'absolute',
+    top: 54,
+    right: 14,
+    alignItems: 'center',
+    backgroundColor: 'rgba(5,5,16,0.55)',
+    borderRadius: 6,
+    paddingHorizontal: 7,
+    paddingVertical: 4,
+  },
+  fpsNum: { color: '#4fc3f7', fontSize: 15, fontWeight: 'bold', fontVariant: ['tabular-nums'] },
+  fpsLbl: { color: '#4fc3f7', fontSize: 8, letterSpacing: 2, opacity: 0.7 },
   livesVal: { color: '#ef5350', fontSize: 18 },
 
   // Boss HP bar
