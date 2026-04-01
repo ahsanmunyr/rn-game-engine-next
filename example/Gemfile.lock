@@ -105,5 +105,3 @@ DEPENDENCIES
   mutex_m
   xcodeproj (< 1.26.0)
 
-BUNDLED WITH
-   2.5.23
