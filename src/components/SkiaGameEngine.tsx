@@ -59,6 +59,20 @@ function _missingDepError(pkg: string, extraStep?: string): string {
   return lines.join('\n');
 }
 
+// react-native-worklets is a required peer dep of @shopify/react-native-skia v2+.
+// Check it first so the error message names it explicitly instead of letting Skia
+// crash with an opaque native module error.
+try {
+  require('react-native-worklets');
+} catch {
+  _peerErrors.push(
+    _missingDepError(
+      'react-native-worklets',
+      'Required by @shopify/react-native-skia v2+. Install it alongside Skia.'
+    )
+  );
+}
+
 try {
   const skia = require('@shopify/react-native-skia');
   _Canvas = skia.Canvas;

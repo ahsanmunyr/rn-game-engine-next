@@ -143,10 +143,12 @@ Result: **60–120 fps** (see [Performance & FPS](#performance--fps) for device 
 
 ### Install Peer Dependencies
 
+`@shopify/react-native-skia` v2+ requires `react-native-worklets` as its own peer dependency. Install all three together:
+
 ```sh
-npm install @shopify/react-native-skia react-native-reanimated
+npm install @shopify/react-native-skia react-native-worklets react-native-reanimated
 # or
-yarn add @shopify/react-native-skia react-native-reanimated
+yarn add @shopify/react-native-skia react-native-worklets react-native-reanimated
 ```
 
 **iOS** — run pod install after adding the packages:

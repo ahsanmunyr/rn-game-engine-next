@@ -92,7 +92,8 @@
     "react": ">=18.0.0",
     "react-native": ">=0.76.0",
     "react-native-reanimated": ">=3.0.0",
-    "react-native-sensors": ">=7.0.0"
+    "react-native-sensors": ">=7.0.0",
+    "react-native-worklets": ">=0.8.0"
   },
   "peerDependenciesMeta": {
     "@shopify/react-native-skia": {
@@ -102,6 +103,9 @@
       "optional": true
     },
     "react-native-sensors": {
+      "optional": true
+    },
+    "react-native-worklets": {
       "optional": true
     }
   },
