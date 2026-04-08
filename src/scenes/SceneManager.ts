@@ -23,11 +23,11 @@ export class SceneManager {
     }
   }
 
-  transitionTo(sceneName: string): void {
+  transitionTo(sceneName: string): boolean {
     const scene = this.scenes[sceneName];
     if (!scene) {
       console.warn(`[rn-game-engine-next] Scene "${sceneName}" not found.`);
-      return;
+      return false;
     }
 
     this.state.activeScene = sceneName;
@@ -36,6 +36,7 @@ export class SceneManager {
         ? scene.entities()
         : { ...scene.entities };
     this.state.systems = [...scene.systems];
+    return true;
   }
 
   getActiveScene(): SceneDefinition | null {

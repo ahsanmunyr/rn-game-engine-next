@@ -87,8 +87,13 @@ export function createArcadePhysicsSystem(options: {
         if (bodyA.bodyType === 'static' && bodyB.bodyType === 'static')
           continue;
 
-        const updatedA = entities[idA] as unknown as ArcadeBody;
-        const updatedB = entities[idB] as unknown as ArcadeBody;
+        // Entity may have been removed by an earlier system this frame
+        const rawA = entities[idA];
+        const rawB = entities[idB];
+        if (!rawA || !rawB) continue;
+
+        const updatedA = rawA as unknown as ArcadeBody;
+        const updatedB = rawB as unknown as ArcadeBody;
 
         if (aabbOverlap(updatedA, updatedB)) {
           options.onCollision?.(idA, idB);
@@ -189,10 +194,10 @@ export function createMatterPhysicsSystem(options?: {
       const e = entities[id] as Record<string, unknown>;
       if (e._matterBody) {
         const body = e._matterBody as any;
-        (entities[id] as Record<string, unknown>).x =
-          body.position.x - (e.width as number) / 2;
-        (entities[id] as Record<string, unknown>).y =
-          body.position.y - (e.height as number) / 2;
+        const w = typeof e.width === 'number' ? e.width : 0;
+        const h = typeof e.height === 'number' ? e.height : 0;
+        (entities[id] as Record<string, unknown>).x = body.position.x - w / 2;
+        (entities[id] as Record<string, unknown>).y = body.position.y - h / 2;
         (entities[id] as Record<string, unknown>).angle = body.angle;
       }
     }

@@ -156,7 +156,7 @@ export interface GameEngineProps {
 // ─── Loop ────────────────────────────────────────────────────────────────────
 
 export interface GameLoopOptions {
-  /** Target FPS (default: 60) */
+  /** Target FPS cap. Omit (or pass undefined) to run uncapped at the display's native refresh rate. */
   fps?: number;
   /** Whether to start immediately (default: true) */
   autoStart?: boolean;

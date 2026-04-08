@@ -35,9 +35,14 @@ export class SensorBridge {
     const { accelerometer, setUpdateIntervalForType, SensorTypes } = sensors;
     setUpdateIntervalForType(SensorTypes.accelerometer, interval);
 
-    this.accelSub = accelerometer.subscribe(({ x, y, z, timestamp }: any) => {
-      onData({ x, y, z, timestamp });
-    });
+    this.accelSub = accelerometer.subscribe(
+      ({ x, y, z, timestamp }: any) => {
+        onData({ x, y, z, timestamp });
+      },
+      (error: unknown) => {
+        console.warn('[rn-game-engine-next] Accelerometer error:', error);
+      }
+    );
   }
 
   stopAccelerometer(): void {
@@ -57,9 +62,14 @@ export class SensorBridge {
     const { gyroscope, setUpdateIntervalForType, SensorTypes } = sensors;
     setUpdateIntervalForType(SensorTypes.gyroscope, interval);
 
-    this.gyroSub = gyroscope.subscribe(({ x, y, z, timestamp }: any) => {
-      onData({ x, y, z, timestamp });
-    });
+    this.gyroSub = gyroscope.subscribe(
+      ({ x, y, z, timestamp }: any) => {
+        onData({ x, y, z, timestamp });
+      },
+      (error: unknown) => {
+        console.warn('[rn-game-engine-next] Gyroscope error:', error);
+      }
+    );
   }
 
   stopGyroscope(): void {

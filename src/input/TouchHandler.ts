@@ -14,7 +14,7 @@ interface TouchHandlerOptions {
 }
 
 function extractPoints(e: GestureResponderEvent): TouchPoint[] {
-  const touches = e.nativeEvent.touches;
+  const touches = e.nativeEvent.touches ?? [];
   return touches.map((t) => ({
     id: t.identifier,
     x: t.pageX,
@@ -24,7 +24,7 @@ function extractPoints(e: GestureResponderEvent): TouchPoint[] {
 }
 
 function extractChangedPoints(e: GestureResponderEvent): TouchPoint[] {
-  const changed = e.nativeEvent.changedTouches;
+  const changed = e.nativeEvent.changedTouches ?? [];
   return changed.map((t) => ({
     id: t.identifier,
     x: t.pageX,

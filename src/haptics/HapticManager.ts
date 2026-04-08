@@ -12,6 +12,15 @@ import type { HapticType } from '../types';
  * no additional packages needed.
  */
 
+const VALID_HAPTIC_TYPES = new Set<HapticType>([
+  'light',
+  'medium',
+  'heavy',
+  'success',
+  'warning',
+  'error',
+]);
+
 // Vibration patterns for fallback (Android only needs these)
 const PATTERNS: Record<HapticType, number | number[]> = {
   light: 10,
@@ -44,6 +53,11 @@ class HapticManagerClass {
 
   trigger(type: HapticType = 'medium'): void {
     if (!this.enabled) return;
+
+    if (!VALID_HAPTIC_TYPES.has(type)) {
+      console.warn(`[rn-game-engine-next] Invalid haptic type: "${type}"`);
+      return;
+    }
 
     if (this.nativeModule) {
       this.nativeModule.triggerHaptic(type);

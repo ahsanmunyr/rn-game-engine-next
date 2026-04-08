@@ -26,8 +26,12 @@ export class EventEmitter<
     listener: Listener<Events[K]>
   ): () => void {
     const wrapper: Listener<Events[K]> = (data) => {
-      listener(data);
-      this.off(event, wrapper);
+      try {
+        listener(data);
+      } finally {
+        // Always unsubscribe — even if the listener throws
+        this.off(event, wrapper);
+      }
     };
     return this.on(event, wrapper);
   }
@@ -37,7 +41,17 @@ export class EventEmitter<
   }
 
   emit<K extends keyof Events>(event: K, data: Events[K]): void {
-    this.listeners.get(event)?.forEach((l) => l(data));
+    const listeners = this.listeners.get(event);
+    if (!listeners) return;
+    // Iterate over a snapshot so that listeners added/removed during emit don't
+    // affect the current call, and a throwing listener doesn't silently drop the rest.
+    for (const l of Array.from(listeners)) {
+      try {
+        l(data);
+      } catch (e) {
+        console.error('[rn-game-engine-next] Event listener error:', e);
+      }
+    }
   }
 
   removeAllListeners(event?: keyof Events): void {

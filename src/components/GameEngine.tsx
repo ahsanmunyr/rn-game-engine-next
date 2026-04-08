@@ -66,9 +66,11 @@ export function GameEngine({
 
   useEffect(() => {
     if (sceneManager && initialScene) {
-      sceneManager.transitionTo(initialScene);
-      entitiesRef.current = sceneManager.getEntities();
-      systemsRef.current = sceneManager.getSystems();
+      const ok = sceneManager.transitionTo(initialScene);
+      if (ok) {
+        entitiesRef.current = sceneManager.getEntities();
+        systemsRef.current = sceneManager.getSystems();
+      }
     }
   }, [sceneManager, initialScene]);
 
@@ -128,7 +130,6 @@ export function GameEngine({
   // ─── Game Loop ─────────────────────────────────────────────────────────────
   useEffect(() => {
     const loop = createGameLoop({
-      fps: 60,
       autoStart: running,
       onUpdate: (time: GameTime) => {
         if (!runningRef.current) return;
@@ -147,10 +148,15 @@ export function GameEngine({
           gyroscope: gyroRef.current,
         };
 
-        // Run all systems in order
+        // Run all systems in order; isolate failures so one bad system doesn't
+        // kill the game loop or prevent subsequent systems from running.
         let current = entitiesRef.current;
-        for (const system of systemsRef.current) {
-          current = system(current, context);
+        for (let i = 0; i < systemsRef.current.length; i++) {
+          try {
+            current = systemsRef.current[i]!(current, context);
+          } catch (e) {
+            console.error(`[rn-game-engine-next] System[${i}] threw:`, e);
+          }
         }
         entitiesRef.current = current;
 

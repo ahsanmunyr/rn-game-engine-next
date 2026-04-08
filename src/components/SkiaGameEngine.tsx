@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { SensorBridge } from '../input/SensorBridge';
 import { createTouchHandler } from '../input/TouchHandler';
 import { GameEngineContext } from '../hooks/useGameEngine';
@@ -24,7 +24,40 @@ let _Picture: any;
 let _Skia: any;
 let _useSharedValue: any;
 let _useDerivedValue: any;
-let _peerError: string | null = null;
+
+// Collect all missing peer-dep errors so both are reported when neither is installed.
+const _peerErrors: string[] = [];
+
+// ─── Platform-specific install hints ─────────────────────────────────────────
+const _isIOS = Platform.OS === 'ios';
+const _isAndroid = Platform.OS === 'android';
+const _platformLabel = _isIOS ? 'iOS' : _isAndroid ? 'Android' : Platform.OS;
+
+function _missingDepError(pkg: string, extraStep?: string): string {
+  const lines: string[] = [
+    `[rn-game-engine-next] SkiaGameEngine — missing peer dependency: "${pkg}"`,
+    '',
+    `  Platform : ${_platformLabel}`,
+    `  Fix      : yarn add ${pkg}`,
+  ];
+
+  if (_isIOS) {
+    lines.push('             cd ios && pod install');
+  } else if (_isAndroid) {
+    lines.push('             Re-run: npx react-native run-android');
+  }
+
+  if (extraStep) {
+    lines.push(`  Also     : ${extraStep}`);
+  }
+
+  lines.push('');
+  lines.push(
+    `  Docs: https://github.com/ahsanmunyr/rn-game-engine-next#skia-game-engine-high-performance-mode`
+  );
+
+  return lines.join('\n');
+}
 
 try {
   const skia = require('@shopify/react-native-skia');
@@ -32,9 +65,7 @@ try {
   _Picture = skia.Picture;
   _Skia = skia.Skia;
 } catch {
-  _peerError =
-    '[rn-game-engine-next] SkiaGameEngine requires @shopify/react-native-skia. ' +
-    'Run: yarn add @shopify/react-native-skia && cd ios && pod install';
+  _peerErrors.push(_missingDepError('@shopify/react-native-skia'));
 }
 
 try {
@@ -42,9 +73,12 @@ try {
   _useSharedValue = reanimated.useSharedValue;
   _useDerivedValue = reanimated.useDerivedValue;
 } catch {
-  _peerError =
-    '[rn-game-engine-next] SkiaGameEngine requires react-native-reanimated. ' +
-    'Run: yarn add react-native-reanimated && cd ios && pod install';
+  _peerErrors.push(
+    _missingDepError(
+      'react-native-reanimated',
+      "Add 'react-native-reanimated/plugin' as the LAST entry in your babel.config.js plugins array"
+    )
+  );
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -58,7 +92,9 @@ export function SkiaGameEngine({
   inputs = ['touch'],
   style,
 }: GameEngineProps) {
-  if (_peerError) throw new Error(_peerError);
+  if (_peerErrors.length > 0) {
+    throw new Error(_peerErrors.join('\n\n' + '─'.repeat(60) + '\n\n'));
+  }
 
   // ─── Mutable refs (stable across renders, no stale-closure issues) ─────────
   const entitiesRef = useRef<Entities>(
@@ -151,8 +187,12 @@ export function SkiaGameEngine({
           };
 
           let current = entitiesRef.current;
-          for (const system of systemsRef.current) {
-            current = system(current, context);
+          for (let i = 0; i < systemsRef.current.length; i++) {
+            try {
+              current = systemsRef.current[i]!(current, context);
+            } catch (e) {
+              console.error(`[rn-game-engine-next] System[${i}] threw:`, e);
+            }
           }
           entitiesRef.current = current;
           entitiesShared.value = current;

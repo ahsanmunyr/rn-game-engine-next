@@ -33,6 +33,7 @@ export function useGameLoop(options: UseGameLoopOptions): GameLoopHandle {
 
     return () => {
       handle.stop();
+      handleRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fps]);
